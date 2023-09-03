@@ -131,7 +131,7 @@
 							<!-- No "library" element here means the plugin will use the default 
 								library template ("okhttp-gson") -->
 							<configOptions>
-								<sourceFolder>src/gen/java/</sourceFolder>
+								<sourceFolder>src/main/java/</sourceFolder>
 							</configOptions>
 							<!-- Normally the artifact version would match the fld API Documentation 
 								Version -->
