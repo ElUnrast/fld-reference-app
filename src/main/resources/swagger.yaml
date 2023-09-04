@@ -182,7 +182,6 @@ components:
       required:
         - refId
         - timestamp
-        - icaNumber
       type: object
       properties:
         refId:
@@ -214,6 +213,7 @@ components:
         - $ref: '#/components/schemas/APIDataElement'
         - type: object
           required:
+            - icaNumber
             - providerId
             - transactionIdentifiers
             - cardNumber
@@ -312,6 +312,7 @@ components:
         - $ref: '#/components/schemas/APIDataElement'
         - type: object
           required:
+            - icaNumber
             - acquirerId
             - transactionIdentifiers
             - cardNumber
@@ -594,6 +595,7 @@ components:
         - $ref: '#/components/schemas/APIDataElement'
         - type: object
           required:
+            - icaNumber
             - providerId
             - auditControlNumber
           properties:
@@ -654,6 +656,7 @@ components:
         - $ref: '#/components/schemas/APIDataElement'
         - type: object
           required:
+            - icaNumber
             - auditControlNumber
           properties:
             acquirerId:
@@ -893,6 +896,7 @@ components:
         - $ref: '#/components/schemas/APIDataElement'
         - type: object
           required:
+            - icaNumber
             - providerId
             - auditControlNumber
             - operationType
@@ -991,9 +995,7 @@ components:
               example: 'Online'
             errorDetails:
               description: Array list containing the combination of error reason codes and their corresponding description (can provide up to 5 errors for a record). It will be absent if the request is processed by FLD application successfully.
-              type: array
-              items:
-                $ref: '#/components/schemas/ErrorWrapper'
+              $ref: '#/components/schemas/ErrorWrapper'                
     SafeFraudProvider:
       description: Indicates the originator of the request. Value 10 is for Issuer and 20 for Acquirer.
       type: integer
