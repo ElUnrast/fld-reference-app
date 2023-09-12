@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mastercard.fld</groupId>
-	<artifactId>fld-reference-app</artifactId>
+	<groupId>com.mastercard</groupId>
+	<artifactId>fld-v1</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
 	<properties>
@@ -16,6 +16,8 @@
 
 		<!-- Mastercard oauth1 signer library - See: https://github.com/Mastercard/oauth1-signer-java/releases -->
 		<oauth1-signer-version>1.5.2</oauth1-signer-version>
+		<!-- Mastercard Encryption Library -->
+		<client-encryption-version>1.7.9</client-encryption-version>
 
 		<!-- Dependencies used by the generated sources -->
 		<okhttp-version>4.11.0</okhttp-version>
@@ -23,23 +25,8 @@
 		<gson-fire-version>1.8.5</gson-fire-version>
 		<swagger-core-version>1.6.11</swagger-core-version>
 		<threetenbp-version>1.6.8</threetenbp-version>
-		<junit-version>4.13.2</junit-version>
 		<jsr305-version>3.0.2</jsr305-version>
-		<junit.jupiter.version>5.6.3</junit.jupiter.version>
-
-		<!-- Mastercard Encryption Library -->
-		<client-encryption-version>1.7.9</client-encryption-version>
 		<javax-annotation-version>1.3.2</javax-annotation-version>
-
-		<!-- Sonar Configuration -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sonar.coverage.jacoco.xmlReportPaths>
-			${project.build.directory}/site/jacoco-merged-test-coverage-report/jacoco.xml
-		</sonar.coverage.jacoco.xmlReportPaths>
-		<sonar.projectKey>Mastercard_fld-api-client-ref-app</sonar.projectKey>
-		<sonar.organization>mastercard</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
 	</properties>
 
 	<dependencies>
@@ -69,11 +56,6 @@
 			<version>${swagger-core-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.threeten</groupId>
-			<artifactId>threetenbp</artifactId>
-			<version>${threetenbp-version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>${jsr305-version}</version>
@@ -82,11 +64,6 @@
 			<groupId>com.mastercard.developer</groupId>
 			<artifactId>oauth1-signer</artifactId>
 			<version>${oauth1-signer-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mastercard.developer</groupId>
@@ -98,27 +75,14 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<version>${javax-annotation-version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.10.19</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>5.3.0</version>
+				<version>7.0.0</version>
 				<executions>
 					<execution>
 						<id>fld API REST Client</id>
@@ -126,19 +90,21 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/swagger.yaml</inputSpec>
+							<inputSpec>${project.basedir}/confirmed-fraud-api-swagger.yaml</inputSpec>
 							<generatorName>java</generatorName>
 							<!-- No "library" element here means the plugin will use the default 
 								library template ("okhttp-gson") -->
 							<configOptions>
-								<sourceFolder>src/generated/java/</sourceFolder>
+								<sourceFolder>generated/java/</sourceFolder>
 							</configOptions>
-							<!-- Normally the artifact version would match the fld API Documentation 
-								Version -->
-							<apiPackage>com.mastercard.fld.api.fld.api</apiPackage>
-							<groupId>com.mastercard.fld.api.fld</groupId>
+							<apiPackage>com.mastercard.fld.api</apiPackage>
+							<modelPackage>com.mastercard.fld.model</modelPackage>
+							<invokerPackage>com.mastercard.fld.invoker</invokerPackage>
+							<generateModelTests>false</generateModelTests>
+							<generateApiTests>false</generateApiTests>
+							<!-- Normally the artifact version would match the fld API Documentation Version -->
+							<groupId>com.mastercard</groupId>
 							<artifactId>fld-v1</artifactId>
-							<modelPackage>com.mastercard.fld.api.fld.model</modelPackage>
 						</configuration>
 					</execution>
 				</executions>
@@ -155,36 +121,6 @@
 			        </execution>
 			    </executions>
 			</plugin>
-				
-			<!--
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
-				<configuration>
-					<excludes>
-                        <exclude>com.mastercard.fld.utility.RequestHelper</exclude>
-                 	</excludes>
-				</configuration>
-				 
-				<executions>
-					<execution>
-						<id>pre-unit-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-				</plugin>
-			-->
 		</plugins>
 	</build>
-
 </project>
